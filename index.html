@@ -871,43 +871,5 @@ const cols=['#2457FF','#FF5C7A','#9DB0E8'];
 })();
 </script>
 
-<div id="ebar" data-ebar>
-  <button type="button" id="ebToggle">開始編輯</button>
-  <button type="button" id="ebSave">下載 HTML</button>
-  <span id="ebTip">點「開始編輯」後，直接點文字修改</span>
-</div>
-<style data-ebar>
-#ebar{position:fixed;left:16px;bottom:16px;z-index:9999;display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:14px;background:#1D1F2A;color:#fff;font:500 13px/1.4 "Noto Sans TC",system-ui,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.25)}
-#ebar button{appearance:none;border:0;cursor:pointer;padding:7px 14px;border-radius:9px;font:700 13px/1 "Noto Sans TC",system-ui,sans-serif;background:#fff;color:#1D1F2A}
-#ebar button.on{background:#FF5C7A;color:#fff}
-#ebTip{opacity:.7;padding-right:4px}
-@media (max-width:600px){#ebTip{display:none}}
-html.editing *:hover{outline:1px dashed rgba(36,87,255,.5);outline-offset:2px}
-html.editing #ebar *:hover{outline:none}
-</style>
-<script data-ebar>
-(function(){
-  var bar=document.getElementById('ebar'),tg=document.getElementById('ebToggle'),sv=document.getElementById('ebSave'),tip=document.getElementById('ebTip');
-  bar.contentEditable='false';
-  function isOn(){return document.documentElement.classList.contains('editing')}
-  function setEdit(on){document.body.contentEditable=on?'true':'inherit';bar.contentEditable='false';document.documentElement.classList.toggle('editing',on);tg.classList.toggle('on',on);tg.textContent=on?'結束編輯':'開始編輯';tip.textContent=on?'編輯中：改完直接按「下載 HTML」':'點「開始編輯」後，直接點文字修改'}
-  tg.addEventListener('click',function(){setEdit(!isOn())});
-  document.addEventListener('click',function(e){if(isOn()){var a=e.target.closest&&e.target.closest('a');if(a&&!bar.contains(a))e.preventDefault()}},true);
-  sv.addEventListener('click',function(){
-    setEdit(false);
-    var c=document.documentElement.cloneNode(true);
-    c.classList.remove('editing');var cb=c.querySelector('body');if(cb)cb.removeAttribute('contenteditable');
-    c.querySelectorAll('.rv.in').forEach(function(el){el.classList.remove('in')});
-    c.querySelectorAll('.nav a.lk.on').forEach(function(el){el.classList.remove('on')});
-    var nav=c.querySelector('#nav');if(nav)nav.classList.remove('hide');
-    var pr=c.querySelector('#progress');if(pr)pr.removeAttribute('style');
-    c.querySelectorAll('[data-count]').forEach(function(el){var v=el.textContent.trim();if(/^[0-9.]+$/.test(v))el.setAttribute('data-count',v)});
-    var lb=c.querySelector('#lb');if(lb)lb.setAttribute('hidden','');
-    var html='<!doctype html>\n'+c.outerHTML;
-    var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([html],{type:'text/html;charset=utf-8'}));
-    a.download='AI熟練師_明亮版_修改後.html';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},1500);
-  });
-})();
-</script>
 </body>
 </html>
